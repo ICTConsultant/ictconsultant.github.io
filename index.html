@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walmley Village Neighbourhood Watch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .navbar-blur {
+            backdrop-filter: blur(10px);
+            background: rgba(30, 58, 138, 0.9);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .emergency-banner {
+            background: linear-gradient(45deg, #dc2626, #ef4444);
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .emergency-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Enhanced crime stats cards */
+        .crime-category-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .crime-category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .trend-up {
+            color: #dc2626;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        }
+        
+        .trend-down {
+            color: #059669;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        }
+        
+        .trend-stable {
+            color: #6b7280;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        }
+        
+        /* Loading states */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* API status indicator */
+        .api-status-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .api-status-indicator.success {
+            background: var(--secondary);
+        }
+        
+        .api-status-indicator.error {
+            background: var(--danger);
+        }
+        
+        .api-status-indicator.loading {
+            background: var(--warning);
+        }
+        
+        /* Form input focus styles */
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* Button transitions */
+        .btn-transition {
+            transition: all 0.2s ease;
+        }
+        
+        .btn-transition:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Responsive grid for crime stats */
+        .crime-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+        
+        /* Interactive elements */
+        .interactive-element {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .interactive-element:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Section spacing */
+        .section-spacing {
+            padding: 5rem 0;
+        }
+        
+        /* Mobile menu animation */
+        .mobile-menu {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        
+        .mobile-menu.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Accessibility focus styles */
+        a:focus, button:focus {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Emergency Banner -->
+    <div class="emergency-banner">
+        <i class="fas fa-exclamation-triangle mr-2"></i>
+        EMERGENCY? Call 999 immediately | Non-emergency: 101
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar-blur fixed w-full top-0 z-50 transition-all duration-300 shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+                        <i class="fas fa-shield-alt text-blue-600 text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white">Walmley Village</h1>
+                        <p class="text-blue-200 text-xs">Neighbourhood Watch</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#home" class="text-white hover:text-blue-200 transition-colors font-medium">Home</a>
+                    <a href="#crime" class="text-white hover:text-blue-200 transition-colors font-medium">Crime Info</a>
+                    <a href="#calendar" class="text-white hover:text-blue-200 transition-colors font-medium">Events</a>
+                    <a href="#report" class="text-white hover:text-blue-200 transition-colors font-medium">Report</a>
+                    <a href="#resources" class="text-white hover:text-blue-200 transition-colors font-medium">Resources</a>
+                    <a href="#membership" class="text-white hover:text-blue-200 transition-colors font-medium">Join Us</a>
+                    <a href="#contact" class="text-white hover:text-blue-200 transition-colors font-medium">Contact</a>
+                </div>
+                <button class="md:hidden text-white focus:outline-none" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-blue-900 bg-opacity-95 z-40 hidden flex items-center justify-center mobile-menu">
+        <div class="flex flex-col items-center justify-center h-full space-y-6 p-4">
+            <button class="absolute top-4 right-4 text-white text-2xl" onclick="toggleMobileMenu()" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+            <a href="#home" class="text-white text-xl font-medium" onclick="toggleMobileMenu()">Home</a>
+            <a href="#crime" class="text-white text-xl font-medium" onclick="toggleMobileMenu()">Crime Info</a>
+            <a href="#calendar" class="text-white text-xl font-medium" onclick="toggleMobileMenu()">Events</a>
+            <a href="#report" class="text-white text-xl font-medium" onclick="toggleMobileMenu()">Report</a>
+            <a href="#resources" class="text-white text-xl font-medium" onclick="toggleMobileMenu()">Resources</a>
+            <a href="#membership" class="text-white text-xl font-medium" onclick="toggleMobileMenu()">Join Us</a>
+            <a href="#contact" class="text-white text-xl font-medium" onclick="toggleMobileMenu()">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient text-white pt-28 pb-20 md:pt-32 md:pb-24">
+        <div class="container mx-auto px-4 text-center">
+            <div class="fade-in">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">Keeping Walmley Safe</h1>
+                <p class="text-lg md:text-xl lg:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
+                    Your community. Your safety. Our priority.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="scrollToSection('report')" 
+                            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 md:px-8 md:py-4 rounded-lg text-base md:text-lg font-semibold transition-colors btn-transition"
+                            aria-label="Report suspicious activity">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>Report Activity
+                    </button>
+                    <button onclick="scrollToSection('membership')" 
+                            class="bg-white hover:bg-gray-100 text-blue-600 px-6 py-3 md:px-8 md:py-4 rounded-lg text-base md:text-lg font-semibold transition-colors btn-transition"
+                            aria-label="Join our community">
+                        <i class="fas fa-users mr-2"></i>Join Our Community
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="bg-white py-12 -mt-8 mx-4 rounded-t-3xl shadow-xl">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div class="fade-in p-4">
+                    <div class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">150+</div>
+                    <div class="text-gray-600 text-sm md:text-base">Active Members</div>
+                </div>
+                <div class="fade-in p-4">
+                    <div class="text-3xl md:text-4xl font-bold text-green-600 mb-2">20</div>
+                    <div class="text-gray-600 text-sm md:text-base">Years Serving</div>
+                </div>
+                <div class="fade-in p-4">
+                    <div class="text-3xl md:text-4xl font-bold text-purple-600 mb-2">45%</div>
+                    <div class="text-gray-600 text-sm md:text-base">Crime Reduction</div>
+                </div>
+                <div class="fade-in p-4">
+                    <div class="text-3xl md:text-4xl font-bold text-orange-600 mb-2">24/7</div>
+                    <div class="text-gray-600 text-sm md:text-base">Community Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Latest News -->
+        <section class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Latest Community News</h2>
+            <div id="news" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- Crime Information -->
+        <section id="crime" class="mb-16 section-spacing">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-4">Local Crime Information</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Stay informed about local incidents and statistics. Data is updated regularly from official sources.</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold mb-2 md:mb-0">Current Month Statistics</h3>
+                    <div class="flex items-center space-x-2">
+                        <div class="pulse-dot w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span class="text-sm text-gray-600">Live Data</span>
+                        <button onclick="fetchCrimeData()" 
+                                class="ml-4 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1 rounded-lg transition-colors"
+                                aria-label="Refresh crime data">
+                            <i class="fas fa-sync-alt mr-1"></i>Refresh
+                        </button>
+                    </div>
+                </div>
+                <div id="crime-stats" class="crime-stats-grid"></div>
+                <div class="mt-6 text-center text-sm text-gray-500">
+                    <p>Data sourced from <a href="https://data.police.uk" target="_blank" rel="noopener" class="text-blue-600 hover:underline">data.police.uk</a></p>
+                    <p id="crime-data-timestamp" class="mt-1"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center card-hover">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-red-800 mb-2">Report Incident</h3>
+                    <p class="text-red-600 mb-4">Seen something suspicious? Report it now.</p>
+                    <button onclick="scrollToSection('report')" 
+                            class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
+                            aria-label="Report an incident">
+                        Report Now
+                    </button>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center card-hover">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-alt text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-blue-800 mb-2">View Events</h3>
+                    <p class="text-blue-600 mb-4">Check upcoming community events.</p>
+                    <button onclick="scrollToSection('calendar')" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
+                            aria-label="View calendar events">
+                        View Calendar
+                    </button>
+                </div>
+                <div class="bg-green-50 border border-green-200 rounded-2xl p-6 text-center card-hover">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-green-800 mb-2">Join Community</h3>
+                    <p class="text-green-600 mb-4">Become part of our safety network.</p>
+                    <button onclick="scrollToSection('membership')" 
+                            class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
+                            aria-label="Join the community">
+                        Join Now
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Calendar -->
+        <section id="calendar" class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Events</h2>
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <div id="calendar-events" class="space-y-4"></div>
+                <div class="mt-6 text-center">
+                    <button onclick="loadMoreEvents()" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
+                            aria-label="Load more events">
+                        <i class="fas fa-plus mr-2"></i>Load More Events
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Section -->
+        <section id="report" class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Report Suspicious Activity</h2>
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-start">
+                        <i class="fas fa-info-circle text-yellow-600 mr-3 mt-1"></i>
+                        <p class="text-yellow-800">
+                            <strong>For emergencies, call 999 immediately.</strong> This form is for non-emergency reports only.
+                            If you witness a crime in progress or need immediate assistance, please call the police.
+                        </p>
+                    </div>
+                </div>
+                <form id="report-form" onsubmit="submitReport(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="mb-4">
+                                <label for="report-description" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Description of Activity <span class="text-red-600">*</span>
+                                </label>
+                                <textarea id="report-description" 
+                                          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                                          rows="4" 
+                                          placeholder="Please describe what you observed..."
+                                          required></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label for="report-images" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Upload Images (Optional)
+                                </label>
+                                <input type="file" 
+                                       id="report-images" 
+                                       class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input"
+                                       accept="image/*"
+                                       multiple>
+                                <p class="text-xs text-gray-500 mt-1">Maximum 3 images, 5MB each</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="mb-4">
+                                <label for="report-location" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Location <span class="text-red-600">*</span>
+                                </label>
+                                <input type="text" 
+                                       id="report-location" 
+                                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                                       placeholder="Street name or area"
+                                       required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="report-datetime" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Date & Time <span class="text-red-600">*</span>
+                                </label>
+                                <input type="datetime-local" 
+                                       id="report-datetime" 
+                                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input"
+                                       required>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <input type="checkbox" 
+                                       id="report-anonymous" 
+                                       class="mr-2 h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                                <label for="report-anonymous" class="text-sm text-gray-700">Report anonymously</label>
+                            </div>
+                            <div id="contact-details" class="mb-4">
+                                <label for="report-contact" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Your Contact (Optional)
+                                </label>
+                                <input type="text" 
+                                       id="report-contact" 
+                                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                                       placeholder="Name, email, or phone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button type="submit" 
+                                class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors btn-transition"
+                                aria-label="Submit report">
+                            <i class="fas fa-paper-plane mr-2"></i>Submit Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section id="resources" class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Safety Resources</h2>
+            <div class="mb-6 text-center max-w-3xl mx-auto">
+                <p class="text-gray-600">Browse our collection of safety guides and resources to help keep you and your family safe.</p>
+            </div>
+            <div id="resources-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- Membership -->
+        <section id="membership" class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Join Our Community</h2>
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Why Join Us?</h3>
+                        <div id="membership-benefits" class="space-y-3 mb-6"></div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="openMembershipModal()" 
+                                    class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors btn-transition"
+                                    aria-label="Join our community">
+                                <i class="fas fa-user-plus mr-2"></i>Join Today
+                            </button>
+                            <button onclick="scrollToSection('contact')" 
+                                    class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:bg-opacity-10 transition-colors btn-transition"
+                                    aria-label="Contact us">
+                                <i class="fas fa-envelope mr-2"></i>Contact Us
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center hidden md:block">
+                        <div class="bg-white bg-opacity-20 rounded-full p-8 inline-block">
+                            <i class="fas fa-shield-alt text-6xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Forum -->
+        <section id="forum" class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Community Discussion</h2>
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Share with the Community</h3>
+                    <div class="space-y-4">
+                        <textarea id="forum-post" 
+                                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                                  rows="3" 
+                                  placeholder="Share your thoughts, concerns, or updates..."></textarea>
+                        <div class="flex items-center justify-between">
+                            <input type="text" 
+                                   id="forum-name" 
+                                   class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                                   placeholder="Your name (optional)">
+                            <button onclick="submitPost()" 
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
+                                    aria-label="Post message">
+                                <i class="fas fa-paper-plane mr-2"></i>Post
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t pt-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">Recent Discussions</h3>
+                        <button onclick="refreshForumPosts()" 
+                                class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                aria-label="Refresh discussions">
+                            <i class="fas fa-sync-alt mr-1"></i>Refresh
+                        </button>
+                    </div>
+                    <div id="forum-posts" class="space-y-4"></div>
+                    <div class="mt-6 text-center">
+                        <button onclick="loadMoreForumPosts()" 
+                                class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-2 rounded-lg transition-colors btn-transition"
+                                aria-label="Load more discussions">
+                            <i class="fas fa-plus mr-2"></i>Load More
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Contact Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center card-hover">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-envelope text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Email</h3>
+                    <p class="text-gray-600 mb-2">info@walmleywatch.org</p>
+                    <a href="mailto:info@walmleywatch.org" 
+                       class="text-blue-600 hover:underline text-sm"
+                       aria-label="Send email">
+                        Send Message
+                    </a>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center card-hover">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-phone text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Phone</h3>
+                    <p class="text-gray-600 mb-2">0121 555 1234</p>
+                    <a href="tel:01215551234" 
+                       class="text-green-600 hover:underline text-sm"
+                       aria-label="Call us">
+                        Call Now
+                    </a>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center card-hover">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-map-marker-alt text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Address</h3>
+                    <p class="text-gray-600 mb-2">Walmley Community Hall<br>Sutton Coldfield, B76</p>
+                    <a href="https://maps.google.com?q=Walmley+Community+Hall" 
+                       target="_blank" 
+                       rel="noopener"
+                       class="text-purple-600 hover:underline text-sm"
+                       aria-label="View on map">
+                        View on Map
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">Walmley Village</h3>
+                            <p class="text-gray-400 text-sm">Neighbourhood Watch</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">Keeping our community safe and connected since 2005.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#crime" class="hover:text-white transition-colors">Crime Info</a></li>
+                        <li><a href="#report" class="hover:text-white transition-colors">Report Activity</a></li>
+                        <li><a href="#resources" class="hover:text-white transition-colors">Resources</a></li>
+                        <li><a href="#membership" class="hover:text-white transition-colors">Join Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Emergency Contacts</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><strong class="text-red-400">Emergency:</strong> 999</li>
+                        <li><strong class="text-yellow-400">Non-Emergency:</strong> 101</li>
+                        <li><strong class="text-blue-400">Crimestoppers:</strong> 0800 555 111</li>
+                        <li><strong class="text-green-400">Local Police:</strong> 0121 555 6789</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Stay Connected</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" 
+                           class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors btn-transition"
+                           aria-label="Facebook page">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" 
+                           class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors btn-transition"
+                           aria-label="Twitter profile">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" 
+                           class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors btn-transition"
+                           aria-label="Instagram profile">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" 
+                           class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors btn-transition"
+                           aria-label="WhatsApp group">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                    <div class="mt-4">
+                        <h5 class="text-sm font-semibold mb-2">Subscribe to Newsletter</h5>
+                        <div class="flex">
+                            <input type="email" 
+                                   placeholder="Your email" 
+                                   class="flex-1 p-2 rounded-l-lg focus:outline-none text-gray-900">
+                            <button class="bg-blue-600 hover:bg-blue-700 px-4 rounded-r-lg transition-colors"
+                                    aria-label="Subscribe">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Walmley Village Neighbourhood Watch. All rights reserved.</p>
+                <p class="mt-2">Developed for the community of Sutton Coldfield, B76.</p>
+                <div class="mt-4 flex justify-center space-x-4">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Use</a>
+                    <a href="#" class="hover:text-white transition-colors">Accessibility</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notification-text"></span>
+    </div>
+
+    <!-- Membership Modal -->
+    <div id="membership-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Join Our Community</h3>
+                <button onclick="closeMembershipModal()" 
+                        class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                        aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="membership-form" onsubmit="submitMembership(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label for="member-name" class="block text-sm font-medium text-gray-700 mb-1">
+                            Full Name <span class="text-red-600">*</span>
+                        </label>
+                        <input type="text" 
+                               id="member-name" 
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                               placeholder="Your full name"
+                               required>
+                    </div>
+                    <div>
+                        <label for="member-email" class="block text-sm font-medium text-gray-700 mb-1">
+                            Email Address <span class="text-red-600">*</span>
+                        </label>
+                        <input type="email" 
+                               id="member-email" 
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                               placeholder="Your email address"
+                               required>
+                    </div>
+                    <div>
+                        <label for="member-phone" class="block text-sm font-medium text-gray-700 mb-1">
+                            Phone Number
+                        </label>
+                        <input type="tel" 
+                               id="member-phone" 
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                               placeholder="Your phone number">
+                    </div>
+                    <div>
+                        <label for="member-address" class="block text-sm font-medium text-gray-700 mb-1">
+                            Address <span class="text-red-600">*</span>
+                        </label>
+                        <textarea id="member-address" 
+                                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent form-input" 
+                                  rows="3" 
+                                  placeholder="Your full address"
+                                  required></textarea>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" 
+                               id="member-consent" 
+                               class="mr-2 h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                               required>
+                        <label for="member-consent" class="text-sm text-gray-700">
+                            I agree to the <a href="#" class="text-blue-600 hover:underline">terms and conditions</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex space-x-4 mt-6">
+                    <button type="button" 
+                            onclick="closeMembershipModal()" 
+                            class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-3 rounded-lg transition-colors btn-transition">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg transition-colors btn-transition">
+                        Join Now
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced data structure with more realistic data
+        const data = {
+            news: [
+                { 
+                    id: 1, 
+                    title: "Quarterly Community Meeting", 
+                    content: "Join us on 25th July at 6 PM for our quarterly meeting. We'll discuss recent developments, crime trends in our area, and upcoming safety initiatives. Light refreshments will be provided.",
+                    date: "2025-07-18",
+                    category: "meeting",
+                    urgent: false,
+                    image: "meeting.jpg"
+                },
+                { 
+                    id: 2, 
+                    title: "New Security Partnership", 
+                    content: "We've partnered with Sutton Security Services to enhance our community protection. New patrol schedules will be implemented starting next week, covering all key areas of Walmley Village.",
+                    date: "2025-07-15",
+                    category: "security",
+                    urgent: true,
+                    image: "security.jpg"
+                },
+                { 
+                    id: 3, 
+                    title: "Summer Safety Tips", 
+                    content: "With the warmer weather and many residents going on holiday, here are essential tips to keep your property secure: install timer lights, ask neighbors to collect mail, and avoid posting holiday plans on social media.",
+                    date: "2025-07-10",
+                    category: "safety",
+                    urgent: false,
+                    image: "safety.jpg"
+                },
+                { 
+                    id: 4, 
+                    title: "Community Garden Project", 
+                    content: "Our new community garden project is looking for volunteers every Saturday morning. This initiative aims to bring neighbors together while improving local green spaces.",
+                    date: "2025-07-08",
+                    category: "community",
+                    urgent: false,
+                    image: "garden.jpg"
+                }
+            ],
+            calendar: [
+                { 
+                    id: 1, 
+                    title: "Monthly Community Meeting", 
+                    date: "2025-07-25", 
+                    time: "18:00", 
+                    location: "Walmley Community Hall",
+                    type: "meeting",
+                    description: "Monthly update on community safety and upcoming initiatives. All residents welcome."
+                },
+                { 
+                    id: 2, 
+                    title: "Summer Safety Walk", 
+                    date: "2025-08-05", 
+                    time: "19:00", 
+                    location: "Village Green (meet by the fountain)",
+                    type: "patrol",
+                    description: "Community safety walk around the village. We'll identify areas that need improved lighting or surveillance."
+                },
+                { 
+                    id: 3, 
+                    title: "Home Security Workshop", 
+                    date: "2025-08-12", 
+                    time: "14:00", 
+                    location: "Community Centre, Room 3",
+                    type: "workshop",
+                    description: "Learn about home security systems and best practices from local experts. Free security assessments available."
+                },
+                { 
+                    id: 4, 
+                    title: "Neighborhood Watch Training", 
+                    date: "2025-08-20", 
+                    time: "10:00", 
+                    location: "Police Community Hub",
+                    type: "training",
+                    description: "Training session for new Neighborhood Watch volunteers. Learn how to be effective community observers."
+                },
+                { 
+                    id: 5, 
+                    title: "Family Safety Day", 
+                    date: "2025-09-07", 
+                    time: "11:00", 
+                    location: "Walmley Park",
+                    type: "event",
+                    description: "Fun day out with safety demonstrations, kids' activities, and information stalls from local services."
+                }
+            ],
+            resources: [
+                { 
+                    id: 1, 
+                    title: "Home Security Checklist", 
+                    description: "Comprehensive guide to securing your home against break-ins and theft. Includes tips for doors, windows, alarms, and lighting.", 
+                    icon: "fas fa-home",
+                    category: "security",
+                    link: "#"
+                },
+                { 
+                    id: 2, 
+                    title: "Online Safety Guide", 
+                    description: "Protect yourself and your family from online scams, identity theft, and cyber threats with these practical tips.", 
+                    icon: "fas fa-globe",
+                    category: "digital",
+                    link: "#"
+                },
+                { 
+                    id: 3, 
+                    title: "Emergency Contacts", 
+                    description: "Essential phone numbers for emergency services, local authorities, and community support organizations.", 
+                    icon: "fas fa-phone-alt",
+                    category: "emergency",
+                    link: "#"
+                },
+                { 
+                    id: 4, 
+                    title: "Neighborhood Watch Guide", 
+                    description: "Everything you need to know about being an effective community member and what to report to authorities.", 
+                    icon: "fas fa-users",
+                    category: "community",
+                    link: "#"
+                },
+                { 
+                    id: 5, 
+                    title: "Vehicle Security Tips", 
+                    description: "Keep your car and belongings safe with these practical tips for parking, alarms, and valuables storage.",
+                    icon: "fas fa-car",
+                    category: "security",
+                    link: "#"
+                },
+                { 
+                    id: 6, 
+                    title: "Personal Safety Guide", 
+                    description: "Stay safe while walking and traveling in the community, especially at night or in isolated areas.",
+                    icon: "fas fa-walking",
+                    category: "safety",
+                    link: "#"
+                },
+                { 
+                    id: 7, 
+                    title: "Scam Awareness", 
+                    description: "Learn to recognize common scams targeting residents and how to protect yourself from fraud.",
+                    icon: "fas fa-exclamation-triangle",
+                    category: "safety",
+                    link: "#"
+                },
+                { 
+                    id: 8, 
+                    title: "Community Alert System", 
+                    description: "Sign up for our text alert system to receive immediate notifications about local incidents.",
+                    icon: "fas fa-bell",
+                    category: "communication",
+                    link: "#"
+                }
+            ],
+            membership: {
+                benefits: [
+                    "Access to exclusive safety alerts and updates",
+                    "Participation in community safety initiatives",
+                    "Direct communication with local police liaisons",
+                    "Invitations to security workshops and training",
+                    "Monthly community newsletter subscription",
+                    "Emergency contact network access",
+                    "Free home security assessment",
+                    "Priority access to community events"
+                ],
+                process: "Join our community by filling out the membership form. We'll contact you within 48 hours to welcome you to our safety network."
+            },
+            forum: [
+                { 
+                    id: 1, 
+                    name: "Sarah M.", 
+                    content: "Noticed increased foot traffic on Elm Road lately, especially in the evenings. Anyone else seeing this or know what might be going on?", 
+                    date: "2025-07-17T18:30:00",
+                    replies: [
+                        { name: "John P.", content: "Yes, I've seen this too. There's some construction work starting soon on that road, might be surveyors.", date: "2025-07-17T20:15:00" },
+                        { name: "Community Admin", content: "We'll add this to our patrol route this week to monitor the situation.", date: "2025-07-18T09:45:00" }
+                    ],
+                    likes: 5
+                },
+                { 
+                    id: 2, 
+                    name: "Community Admin", 
+                    content: "Reminder: Monthly patrol schedule is available on our website. We particularly need volunteers for weekend shifts.", 
+                    date: "2025-07-16T10:00:00",
+                    replies: [],
+                    pinned: true
+                },
+                { 
+                    id: 3, 
+                    name: "David R.", 
+                    content: "Does anyone have recommendations for a good home security camera system? Looking to install something affordable but reliable.", 
+                    date: "2025-07-15T14:20:00",
+                    replies: [
+                        { name: "Lisa T.", content: "We've been happy with the Ring system - easy to install and integrates well with neighborhood alerts.", date: "2025-07-15T16:45:00" }
+                    ],
+                    likes: 3
+                }
+            ]
+        };
+
+        // Location coordinates for Walmley Village, Sutton Coldfield, B76
+        const WALMLEY_COORDS = {
+            lat: 52.5487,
+            lng: -1.8050
+        };
+
+        // API Configuration
+        const API_CONFIG = {
+            police: {
+                baseUrl: 'https://data.police.uk/api',
+                endpoints: {
+                    crimes: '/crimes-street/all-crime',
+                    forces: '/forces',
+                    neighbourhoods: '/locate-neighbourhood'
+                },
+                cacheDuration: 3600000 // 1 hour in milliseconds
+            },
+            weather: {
+                baseUrl: 'https://api.openweathermap.org/data/2.5',
+                key: 'demo_key', // Note: In production, use a proper API key
+                cacheDuration: 1800000 // 30 minutes in milliseconds
+            }
+        };
+
+        // State management
+        const appState = {
+            currentEventsPage: 1,
+            eventsPerPage: 3,
+            currentForumPage: 1,
+            forumPostsPerPage: 3,
+            lastCrimeFetch: null,
+            lastWeatherFetch: null
+        };
+
+        // DOM Ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the page
+            loadData();
+            
+            // Set up scroll event for navbar
+            setupNavbarScroll();
+            
+            // Initialize animations
+            setupAnimations();
+            
+            // Check for service worker support for PWA
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js').then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    }).catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
+        });
+
+        // Load all data and initialize the page
+        function loadData() {
+            // Initialize API status indicator
+            createApiStatusIndicator();
+            
+            // Load static data first
+            loadStaticData();
+            
+            // Check if we have recent cached crime data
+            const lastCrimeFetch = localStorage.getItem('lastCrimeFetch');
+            const cachedCrimeData = localStorage.getItem('cachedCrimeData');
+            
+            if (cachedCrimeData && lastCrimeFetch && 
+                (Date.now() - new Date(lastCrimeFetch).getTime()) < API_CONFIG.police.cacheDuration) {
+                // Use cached data if it's recent
+                const crimeStats = JSON.parse(cachedCrimeData);
+                displayCrimeData(crimeStats.stats, crimeStats.trends);
+                updateApiStatus('success', 'Data loaded from cache');
+            } else {
+                // Fetch fresh data
+                fetchCrimeData();
+            }
+            
+            // Fetch weather data
+            fetchWeatherData();
+            
+            // Set up periodic data refresh
+            setupDataRefresh();
+        }
+
+        function createApiStatusIndicator() {
+            const indicator = document.createElement('div');
+            indicator.id = 'api-status';
+            indicator.className = 'api-status-indicator loading';
+            indicator.innerHTML = '<i class="fas fa-sync fa-spin"></i><span>Loading data...</span>';
+            document.body.appendChild(indicator);
+        }
+
+        function updateApiStatus(status, message) {
+            const indicator = document.getElementById('api-status');
+            if (indicator) {
+                indicator.className = `api-status-indicator ${status}`;
+                indicator.innerHTML = `
+                    <i class="fas fa-${status === 'loading' ? 'sync fa-spin' : status === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                // Auto-hide success status after 3 seconds
+                if (status === 'success') {
+                    setTimeout(() => {
+                        indicator.style.opacity = '0';
+                        setTimeout(() => indicator.remove(), 300);
+                    }, 3000);
+                }
+            }
+        }
+
+        function loadStaticData() {
+            // Load news with enhanced styling
+            loadNews();
+            
+            // Load calendar events (first page)
+            loadCalendarEvents();
+            
+            // Load resources
+            loadResources();
+            
+            // Load membership info
+            loadMembershipInfo();
+            
+            // Load forum posts (first page)
+            loadForumPosts();
+        }
+
+        function loadNews() {
+            const newsDiv = document.getElementById('news');
+            if (!newsDiv) return;
+            
+            newsDiv.innerHTML = data.news.map(item => {
+                const urgentBadge = item.urgent ? 
+                    '<span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">Urgent</span>' : '';
+                
+                const categoryIcon = {
+                    'meeting': 'fas fa-calendar-alt',
+                    'security': 'fas fa-shield-alt',
+                    'safety': 'fas fa-exclamation-triangle',
+                    'community': 'fas fa-hands-helping'
+                }[item.category] || 'fas fa-info-circle';
+
+                return `
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                        ${item.image ? `
+                            <div class="h-48 bg-gray-200 overflow-hidden">
+                                <img src="images/${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                            </div>
+                        ` : ''}
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <i class="${categoryIcon} text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">${item.title}</h4>
+                                        <p class="text-sm text-gray-500">${formatDate(item.date)}</p>
+                                    </div>
+                                </div>
+                                ${urgentBadge}
+                            </div>
+                            <p class="text-gray-600 mb-4">${item.content}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-400 capitalize">${item.category}</span>
+                                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium interactive-element">
+                                    Read More <i class="fas fa-chevron-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadCalendarEvents(page = 1) {
+            const calendarDiv = document.getElementById('calendar-events');
+            if (!calendarDiv) return;
+            
+            const startIdx = (page - 1) * appState.eventsPerPage;
+            const endIdx = startIdx + appState.eventsPerPage;
+            const eventsToShow = data.calendar.slice(0, endIdx);
+            
+            calendarDiv.innerHTML = eventsToShow.map(event => {
+                const typeIcon = {
+                    'meeting': 'fas fa-users',
+                    'patrol': 'fas fa-walking',
+                    'workshop': 'fas fa-tools',
+                    'training': 'fas fa-graduation-cap',
+                    'event': 'fas fa-calendar-check'
+                }[event.type] || 'fas fa-calendar';
+
+                const typeColor = {
+                    'meeting': 'bg-blue-100 text-blue-800',
+                    'patrol': 'bg-green-100 text-green-800',
+                    'workshop': 'bg-purple-100 text-purple-800',
+                    'training': 'bg-yellow-100 text-yellow-800',
+                    'event': 'bg-pink-100 text-pink-800'
+                }[event.type] || 'bg-gray-100 text-gray-800';
+
+                return `
+                    <div class="border-l-4 border-blue-500 pl-4 py-3 hover:bg-gray-50 transition-colors rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-gray-800">${event.title}</h4>
+                            <span class="text-xs font-medium px-2 py-1 rounded-full ${typeColor}">
+                                <i class="${typeIcon} mr-1"></i>${event.type}
+                            </span>
+                        </div>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p><i class="fas fa-calendar mr-2"></i>${formatDate(event.date)} at ${event.time}</p>
+                            <p><i class="fas fa-map-marker-alt mr-2"></i>${event.location}</p>
+                            <p class="text-xs text-gray-500 mt-2">${event.description}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update current page state
+            appState.currentEventsPage = page;
+            
+            // Hide load more button if we've shown all events
+            if (endIdx >= data.calendar.length) {
+                document.querySelector('#calendar button')?.classList.add('hidden');
+            }
+        }
+
+        function loadMoreEvents() {
+            loadCalendarEvents(appState.currentEventsPage + 1);
+        }
+
+        function loadResources() {
+            const resourcesDiv = document.getElementById('resources-list');
+            if (!resourcesDiv) return;
+            
+            resourcesDiv.innerHTML = data.resources.map(resource => `
+                <div class="bg-white rounded-2xl shadow-lg p-6 card-hover interactive-element">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="${resource.icon} text-blue-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">${resource.title}</h4>
+                    <p class="text-gray-600 mb-4">${resource.description}</p>
+                    <a href="${resource.link}" class="text-blue-600 hover:text-blue-800 text-sm font-medium inline-flex items-center">
+                        View Resource <i class="fas fa-chevron-right ml-1"></i>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function loadMembershipInfo() {
+            const benefitsDiv = document.getElementById('membership-benefits');
+            if (!benefitsDiv) return;
+            
+            benefitsDiv.innerHTML = data.membership.benefits.map(benefit => `
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <span>${benefit}</span>
+                </div>
+            `).join('');
+        }
+
+        function loadForumPosts(page = 1) {
+            const forumDiv = document.getElementById('forum-posts');
+            if (!forumDiv) return;
+            
+            const startIdx = (page - 1) * appState.forumPostsPerPage;
+            const endIdx = startIdx + appState.forumPostsPerPage;
+            const postsToShow = data.forum.slice(0, endIdx);
+            
+            forumDiv.innerHTML = postsToShow.map(post => {
+                const pinnedBadge = post.pinned ? 
+                    '<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full mr-2">Pinned</span>' : '';
+                
+                const repliesText = post.replies?.length ? 
+                    `${post.replies.length} ${post.replies.length === 1 ? 'reply' : 'replies'}` : 'No replies yet';
+                
+                return `
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                ${pinnedBadge}
+                                <span class="font-medium text-gray-800">${post.name}</span>
+                            </div>
+                            <span class="text-xs text-gray-500">${formatDateTime(post.date)}</span>
+                        </div>
+                        <p class="text-gray-700 mb-3">${post.content}</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <button class="text-blue-600 hover:text-blue-800 interactive-element">
+                                <i class="far fa-comment mr-1"></i> ${repliesText}
+                            </button>
+                            <button class="text-gray-500 hover:text-red-500 interactive-element">
+                                <i class="far fa-heart mr-1"></i> Like
+                            </button>
+                        </div>
+                        
+                        ${post.replies?.length ? `
+                            <div class="mt-3 pl-4 border-l-2 border-gray-200 space-y-3">
+                                ${post.replies.map(reply => `
+                                    <div class="text-sm">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium text-gray-700">${reply.name}</span>
+                                            <span class="text-xs text-gray-500">${formatDateTime(reply.date)}</span>
+                                        </div>
+                                        <p class="text-gray-600">${reply.content}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            // Update current page state
+            appState.currentForumPage = page;
+            
+            // Hide load more button if we've shown all posts
+            if (endIdx >= data.forum.length) {
+                document.querySelector('#forum-posts + div button')?.classList.add('hidden');
+            }
+        }
+
+        function loadMoreForumPosts() {
+            loadForumPosts(appState.currentForumPage + 1);
+        }
+
+        function refreshForumPosts() {
+            loadForumPosts(1);
+            showNotification('Forum posts refreshed', 'success');
+        }
+
+        // Enhanced crime data fetching with multiple months and trend analysis
+        async function fetchCrimeData() {
+            updateApiStatus('loading', 'Fetching crime data...');
+            
+            const crimeStatsDiv = document.getElementById('crime-stats');
+            if (!crimeStatsDiv) return;
+            
+            crimeStatsDiv.innerHTML = `
+                <div class="col-span-full flex items-center justify-center p-8">
+                    <div class="animate-pulse flex items-center space-x-3">
+                        <div class="w-6 h-6 bg-blue-500 rounded-full animate-bounce"></div>
+                        <span class="text-gray-600">Loading crime statistics...</span>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const currentDate = new Date();
+                const months = [];
+                
+                // Get last 3 months of data
+                for (let i = 0; i < 3; i++) {
+                    const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+                    const yearMonth = date.toISOString().slice(0, 7);
+                    months.push(yearMonth);
+                }
+
+                const allCrimes = [];
+                const monthlyData = {};
+
+                // Fetch data for each month
+                for (const month of months) {
+                    try {
+                        const url = `${API_CONFIG.police.baseUrl}${API_CONFIG.police.endpoints.crimes}?lat=${WALMLEY_COORDS.lat}&lng=${WALMLEY_COORDS.lng}&date=${month}`;
+                        const response = await fetch(url);
+                        
+                        if (response.ok) {
+                            const crimes = await response.json();
+                            allCrimes.push(...crimes);
+                            monthlyData[month] = crimes;
+                        } else {
+                            console.warn(`Failed to fetch data for ${month}: ${response.status}`);
+                        }
+                    } catch (error) {
+                        console.warn(`Failed to fetch data for ${month}:`, error);
+                    }
+                }
+
+                if (allCrimes.length === 0) {
+                    displayNoCrimeData();
+                    updateApiStatus('error', 'No crime data available');
+                    return;
+                }
+
+                // Process and display crime data
+                const crimeStats = processCrimeData(allCrimes);
+                const trends = calculateTrends(monthlyData);
+                displayCrimeData(crimeStats, trends);
+                
+                // Cache the data
+                const cacheData = {
+                    stats: crimeStats,
+                    trends: trends,
+                    timestamp: new Date().toISOString()
+                };
+                
+                localStorage.setItem('lastCrimeFetch', new Date().toISOString());
+                localStorage.setItem('cachedCrimeData', JSON.stringify(cacheData));
+                
+                updateApiStatus('success', 'Crime data loaded');
+                
+            } catch (error) {
+                console.error('Error fetching crime data:', error);
+                displayCrimeError();
+                updateApiStatus('error', 'Failed to load crime data');
+            }
+        }
+
+        function processCrimeData(crimes) {
+            const stats = {
+                total: crimes.length,
+                categories: {},
+                locations: {},
+                outcomes: {},
+                byMonth: {}
+            };
+
+            crimes.forEach(crime => {
+                // Process categories
+                const category = formatCrimeCategory(crime.category);
+                stats.categories[category] = (stats.categories[category] || 0) + 1;
+
+                // Process locations
+                if (crime.location && crime.location.street) {
+                    const street = crime.location.street.name;
+                    stats.locations[street] = (stats.locations[street] || 0) + 1;
+                }
+
+                // Process outcomes
+                if (crime.outcome_status) {
+                    const outcome = crime.outcome_status.category || 'Unknown';
+                    stats.outcomes[outcome] = (stats.outcomes[outcome] || 0) + 1;
+                }
+                
+                // Process by month
+                const month = crime.month || new Date(crime.date).toISOString().slice(0, 7);
+                stats.byMonth[month] = (stats.byMonth[month] || 0) + 1;
+            });
+
+            return stats;
+        }
+
+        function formatCrimeCategory(category) {
+            return category
+                .replace(/-/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase())
+                .replace(/And/g, 'and');
+        }
+
+        function calculateTrends(monthlyData) {
+            const months = Object.keys(monthlyData).sort().reverse();
+            const trends = {};
+
+            if (months.length < 2) return trends;
+
+            const currentMonth = monthlyData[months[0]] || [];
+            const previousMonth = monthlyData[months[1]] || [];
+
+            const currentCategories = {};
+            const previousCategories = {};
+
+            currentMonth.forEach(crime => {
+                const category = formatCrimeCategory(crime.category);
+                currentCategories[category] = (currentCategories[category] || 0) + 1;
+            });
+
+            previousMonth.forEach(crime => {
+                const category = formatCrimeCategory(crime.category);
+                previousCategories[category] = (previousCategories[category] || 0) + 1;
+            });
+
+            // Calculate percentage changes
+            Object.keys(currentCategories).forEach(category => {
+                const current = currentCategories[category] || 0;
+                const previous = previousCategories[category] || 0;
+                
+                if (previous > 0) {
+                    const change = ((current - previous) / previous) * 100;
+                    trends[category] = {
+                        change: Math.round(change * 10) / 10, // Round to 1 decimal place
+                        direction: change > 0 ? 'up' : change < 0 ? 'down' : 'stable'
+                    };
+                }
+            });
+
+            return trends;
+        }
+
+        function displayCrimeData(stats, trends) {
+            const crimeStatsDiv = document.getElementById('crime-stats');
+            const timestampDiv = document.getElementById('crime-data-timestamp');
+            
+            if (!crimeStatsDiv || !timestampDiv) return;
+            
+            if (stats.total === 0) {
+                displayNoCrimeData();
+                return;
+            }
+
+            // Update timestamp
+            const lastUpdated = new Date(stats.timestamp || new Date());
+            timestampDiv.textContent = `Last updated: ${formatDateTime(lastUpdated)}`;
+
+            const categoryEntries = Object.entries(stats.categories)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 6); // Show top 6 categories
+
+            crimeStatsDiv.innerHTML = categoryEntries.map(([category, count]) => {
+                const trend = trends[category];
+                const trendIcon = trend ? 
+                    trend.direction === 'up' ? 'fas fa-arrow-up' : 
+                    trend.direction === 'down' ? 'fas fa-arrow-down' : 'fas fa-equals' : '';
+                const trendText = trend ? `${Math.abs(trend.change)}% ${trend.direction === 'up' ? 'increase' : 'decrease'}` : '';
+                const trendColor = trend ? 
+                    trend.direction === 'up' ? 'text-red-600' : 
+                    trend.direction === 'down' ? 'text-green-600' : 'text-gray-600' : '';
+
+                return `
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 hover:border-blue-300 transition-colors crime-category-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-gray-800">${category}</h4>
+                            <span class="text-2xl font-bold text-blue-600">${count}</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            ${count === 1 ? 'incident' : 'incidents'} reported
+                        </div>
+                        ${trend ? `
+                            <div class="mt-2 flex items-center text-xs ${trendColor}">
+                                <i class="${trendIcon} mr-1"></i>
+                                ${trendText}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            // Add summary card
+            const summaryCard = `
+                <div class="col-span-full bg-blue-50 rounded-xl p-6 border border-blue-200">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-blue-900 mb-2">
+                                Crime Summary (Last 3 Months)
+                            </h3>
+                            <div class="text-blue-700 space-y-1">
+                                <p>Total incidents: <strong>${stats.total}</strong></p>
+                                <p>Most common: <strong>${categoryEntries[0]?.[0] || 'N/A'}</strong> (${categoryEntries[0]?.[1] || 0} cases)</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-center md:text-right">
+                            <div class="text-3xl font-bold text-blue-600">${stats.total}</div>
+                            <div class="text-sm text-blue-500">total incidents</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            crimeStatsDiv.innerHTML = summaryCard + crimeStatsDiv.innerHTML;
+        }
+
+        function displayNoCrimeData() {
+            const crimeStatsDiv = document.getElementById('crime-stats');
+            if (!crimeStatsDiv) return;
+            
+            crimeStatsDiv.innerHTML = `
+                <div class="col-span-full bg-green-50 rounded-xl p-8 border border-green-200 text-center">
+                    <div class="text-green-600 mb-4">
+                        <i class="fas fa-shield-alt text-4xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-green-900 mb-2">Great News!</h3>
+                    <p class="text-green-700 mb-2">No crime incidents reported in your area recently.</p>
+                    <p class="text-green-600 text-sm">Data sourced from data.police.uk</p>
+                </div>
+            `;
+        }
+
+        function displayCrimeError() {
+            const crimeStatsDiv = document.getElementById('crime-stats');
+            if (!crimeStatsDiv) return;
+            
+            crimeStatsDiv.innerHTML = `
+                <div class="col-span-full bg-yellow-50 rounded-xl p-8 border border-yellow-200 text-center">
+                    <div class="text-yellow-600 mb-4">
+                        <i class="fas fa-exclamation-triangle text-4xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-yellow-900 mb-2">Data Temporarily Unavailable</h3>
+                    <p class="text-yellow-700 mb-2">Unable to load crime statistics at the moment.</p>
+                    <p class="text-yellow-600 text-sm">Please try again later or visit <a href="https://www.police.uk" class="underline" target="_blank" rel="noopener">police.uk</a> directly</p>
+                    <button onclick="fetchCrimeData()" 
+                            class="mt-4 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors btn-transition">
+                        <i class="fas fa-sync-alt mr-2"></i>Retry
+                    </button>
+                </div>
+            `;
+        }
+
+        // Enhanced weather integration
+        async function fetchWeatherData() {
+            updateApiStatus('loading', 'Fetching weather data...');
+            
+            try {
+                // Check for cached weather data
+                const lastWeatherFetch = localStorage.getItem('lastWeatherFetch');
+                const cachedWeatherData = localStorage.getItem('cachedWeatherData');
+                
+                if (cachedWeatherData && lastWeatherFetch && 
+                    (Date.now() - new Date(lastWeatherFetch).getTime()) < API_CONFIG.weather.cacheDuration) {
+                    // Use cached data
+                    const weatherData = JSON.parse(cachedWeatherData);
+                    displayWeatherInfo(weatherData);
+                    updateApiStatus('success', 'Weather data loaded from cache');
+                    return;
+                }
+                
+                // This would be the actual API call in production:
+                // const url = `${API_CONFIG.weather.baseUrl}/weather?lat=${WALMLEY_COORDS.lat}&lon=${WALMLEY_COORDS.lng}&appid=${API_CONFIG.weather.key}&units=metric`;
+                // const response = await fetch(url);
+                // const weatherData = await response.json();
+                
+                // Mock data for demo purposes
+                const conditions = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain', 'Overcast'];
+                const mockWeatherData = {
+                    main: {
+                        temp: Math.round(15 + Math.random() * 10),
+                        humidity: Math.round(40 + Math.random() * 40)
+                    },
+                    weather: [{
+                        main: conditions[Math.floor(Math.random() * conditions.length)],
+                        icon: '01d' // Default icon
+                    }],
+                    wind: {
+                        speed: Math.round(5 + Math.random() * 15)
+                    },
+                    name: 'Walmley'
+                };
+                
+                displayWeatherInfo(mockWeatherData);
+                
+                // Cache the data
+                localStorage.setItem('lastWeatherFetch', new Date().toISOString());
+                localStorage.setItem('cachedWeatherData', JSON.stringify(mockWeatherData));
+                
+                updateApiStatus('success', 'Weather data loaded');
+            } catch (error) {
+                console.error('Weather data fetch failed:', error);
+                updateApiStatus('error', 'Failed to load weather data');
+            }
+        }
+
+        function displayWeatherInfo(weather) {
+            const weatherWidget = `
+                <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="font-semibold text-blue-900">Current Weather</h4>
+                            <p class="text-blue-700 capitalize">${weather.weather[0].main.toLowerCase()}</p>
+                            <p class="text-sm text-blue-600 mt-1">
+                                Humidity: ${weather.main.humidity}% | Wind: ${weather.wind.speed} mph
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-blue-600">${Math.round(weather.main.temp)}°C</div>
+                            <div class="text-sm text-blue-500">${weather.name || 'Walmley'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add weather widget to home section
+            const homeSection = document.querySelector('#home .container');
+            if (homeSection && !document.querySelector('#weather-widget')) {
+                const weatherDiv = document.createElement('div');
+                weatherDiv.id = 'weather-widget';
+                weatherDiv.className = 'mt-6 fade-in';
+                weatherDiv.innerHTML = weatherWidget;
+                homeSection.appendChild(weatherDiv);
+            }
+        }
+
+        function setupDataRefresh() {
+            // Refresh crime data every hour
+            setInterval(() => {
+                const lastFetch = localStorage.getItem('lastCrimeFetch');
+                if (!lastFetch || (Date.now() - new Date(lastFetch).getTime()) > API_CONFIG.police.cacheDuration) {
+                    fetchCrimeData();
+                }
+            }, 3600000); // 1 hour
+            
+            // Refresh weather data every 30 minutes
+            setInterval(() => {
+                const lastFetch = localStorage.getItem('lastWeatherFetch');
+                if (!lastFetch || (Date.now() - new Date(lastFetch).getTime()) > API_CONFIG.weather.cacheDuration) {
+                    fetchWeatherData();
+                }
+            }, 1800000); // 30 minutes
+        }
+
+        function setupNavbarScroll() {
+            let lastScroll = 0;
+            const navbar = document.querySelector('nav');
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    navbar.classList.remove('scrolled-up');
+                    navbar.classList.remove('scrolled-down');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && currentScroll > 100) {
+                    // Scrolling down
+                    navbar.classList.remove('scrolled-up');
+                    navbar.classList.add('scrolled-down');
+                } else if (currentScroll < lastScroll) {
+                    // Scrolling up
+                    navbar.classList.remove('scrolled-down');
+                    navbar.classList.add('scrolled-up');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        function setupAnimations() {
+            // Initialize Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            // Observe all elements with the 'fade-in' class
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('show');
+            
+            // Toggle body scroll
+            document.body.style.overflow = menu.classList.contains('show') ? 'hidden' : '';
+        }
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                
+                // Close mobile menu if open
+                const menu = document.getElementById('mobile-menu');
+                if (menu && !menu.classList.contains('hidden')) {
+                    toggleMobileMenu();
+                }
+            }
+        }
+
+        function submitReport(event) {
+            if (event) event.preventDefault();
+            
+            const description = document.getElementById('report-description').value;
+            const location = document.getElementById('report-location').value;
+            const datetime = document.getElementById('report-datetime').value;
+            const anonymous = document.getElementById('report-anonymous').checked;
+            const contact = document.getElementById('report-contact').value;
+            
+            if (!description || !location || !datetime) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // In a real app, this would send to a server
+            console.log('Report submitted:', {
+                description,
+                location,
+                datetime,
+                anonymous,
+                contact
+            });
+            
+            // Reset form
+            document.getElementById('report-form').reset();
+            
+            showNotification('Report submitted successfully!', 'success');
+        }
+
+        function submitPost() {
+            const postContent = document.getElementById('forum-post').value;
+            const postName = document.getElementById('forum-name').value || 'Anonymous';
+            
+            if (!postContent) {
+                showNotification('Please enter a message to post', 'error');
+                return;
+            }
+            
+            // In a real app, this would send to a server
+            const newPost = {
+                id: Date.now(),
+                name: postName,
+                content: postContent,
+                date: new Date().toISOString(),
+                replies: []
+            };
+            
+            data.forum.unshift(newPost); // Add to beginning of array
+            
+            // Reset form
+            document.getElementById('forum-post').value = '';
+            
+            // Reload posts
+            loadForumPosts(1);
+            
+            showNotification('Post submitted successfully!', 'success');
+        }
+
+        function openMembershipModal() {
+            document.getElementById('membership-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMembershipModal() {
+            document.getElementById('membership-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function submitMembership(event) {
+            if (event) event.preventDefault();
+            
+            const name = document.getElementById('member-name').value;
+            const email = document.getElementById('member-email').value;
+            const phone = document.getElementById('member-phone').value;
+            const address = document.getElementById('member-address').value;
+            const consent = document.getElementById('member-consent').checked;
+            
+            if (!name || !email || !address || !consent) {
+                showNotification('Please fill in all required fields and agree to the terms', 'error');
+                return;
+            }
+            
+            // In a real app, this would send to a server
+            console.log('Membership submitted:', {
+                name,
+                email,
+                phone,
+                address
+            });
+            
+            // Reset form
+            document.getElementById('membership-form').reset();
+            
+            closeMembershipModal();
+            showNotification('Membership application submitted! We\'ll contact you soon.', 'success');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            if (!notification || !notificationText) return;
+            
+            notification.className = `notification ${type}`;
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-GB', options);
+        }
+
+        function formatDateTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true
+            };
+            return date.toLocaleDateString('en-GB', options);
+        }
+    </script>
+</body>
+</html>
