@@ -361,6 +361,22 @@
     </section>
 
     <main class="container mx-auto px-4 py-8">
+        
+        <!-- Community Calendar -->
+        <section id="calendar" class="mb-16 section-spacing">
+            <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Events</h2>
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <div id="calendar-events" class="space-y-4"></div>
+                <div class="mt-6 text-center">
+                    <button onclick="loadMoreEvents()" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
+                            aria-label="Load more events">
+                        <i class="fas fa-plus mr-2"></i>Load More Events
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <!-- Latest News -->
         <section class="hidden"> <!--class="mb-16 section-spacing" -->
             <h2 class="text-3xl font-bold mb-8 text-center">Latest Community News</h2>
@@ -432,21 +448,6 @@
                             class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
                             aria-label="Join the community">
                         Coming Soon<!-- Join Now -->
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Community Calendar -->
-        <section id="calendar" class="mb-16 section-spacing">
-            <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Events</h2>
-            <div class="bg-white rounded-2xl shadow-lg p-6">
-                <div id="calendar-events" class="space-y-4"></div>
-                <div class="mt-6 text-center">
-                    <button onclick="loadMoreEvents()" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
-                            aria-label="Load more events">
-                        <i class="fas fa-plus mr-2"></i>Load More Events
                     </button>
                 </div>
             </div>
