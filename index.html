@@ -20,7 +20,31 @@
             font-family: 'Poppins', sans-serif;
             scroll-behavior: smooth;
         }
-        
+
+/* JJ start */
+        .hidden {
+            display: none;
+        }
+
+        /* Banner container */
+        .banner {
+            width: 100%;
+            overflow: hidden; /* Ensures no content overflows */
+            position: relative; /* Allows for absolute positioning of child elements if needed */
+            height: 300px; /* Adjust the height as needed for your design */
+        }
+
+        /* Responsive image styling */
+        .banner img {
+            width: 100%; /* Makes the image take up the full width of its container */
+            height: 100%; /* Makes the image take up the full height of its container */
+            object-fit: cover; /* This is key for responsiveness. It scales the image to fill the container, cropping if necessary to maintain its aspect ratio. */
+            object-position: center; /* Centers the image within the container */
+            display: block; /* Removes any extra space below the image */
+        }
+
+/* JJ end */
+
         .hero-gradient {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
         }
@@ -232,6 +256,11 @@
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Banner -->
+    <header class="banner">
+        <img src="walmleybanner.jpg" alt="A scenic view of Walmley village, Sutton Coldfield, with residential homes and greenery.">
+    </header>
+
     <!-- Emergency Banner -->
     <div class="emergency-banner">
         <i class="fas fa-exclamation-triangle mr-2"></i>
@@ -255,9 +284,9 @@
                     <a href="#home" class="text-white hover:text-blue-200 transition-colors font-medium">Home</a>
                     <a href="#crime" class="text-white hover:text-blue-200 transition-colors font-medium">Crime Info</a>
                     <a href="#calendar" class="text-white hover:text-blue-200 transition-colors font-medium">Events</a>
-                    <a href="#report" class="text-white hover:text-blue-200 transition-colors font-medium">Report</a>
+                    <!-- <a href="#report" class="text-white hover:text-blue-200 transition-colors font-medium">Report</a>
                     <a href="#resources" class="text-white hover:text-blue-200 transition-colors font-medium">Resources</a>
-                    <a href="#membership" class="text-white hover:text-blue-200 transition-colors font-medium">Join Us</a>
+                    <a href="#membership" class="text-white hover:text-blue-200 transition-colors font-medium">Join Us</a> -->
                     <a href="#contact" class="text-white hover:text-blue-200 transition-colors font-medium">Contact</a>
                 </div>
                 <button class="md:hidden text-white focus:outline-none" onclick="toggleMobileMenu()" aria-label="Toggle menu">
@@ -291,7 +320,7 @@
                 <p class="text-lg md:text-xl lg:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
                     Your community. Your safety. Our priority.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <div class="hidden"><!-- class="flex flex-col sm:flex-row gap-4 justify-center"> -->
                     <button onclick="scrollToSection('report')" 
                             class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 md:px-8 md:py-4 rounded-lg text-base md:text-lg font-semibold transition-colors btn-transition"
                             aria-label="Report suspicious activity">
@@ -312,19 +341,19 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                 <div class="fade-in p-4">
-                    <div class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">150+</div>
+                    <div class="text-3xl md:text-4xl font-bold text-blue-600 mb-2">170+</div>
                     <div class="text-gray-600 text-sm md:text-base">Active Members</div>
                 </div>
                 <div class="fade-in p-4">
-                    <div class="text-3xl md:text-4xl font-bold text-green-600 mb-2">20</div>
+                    <div class="text-3xl md:text-4xl font-bold text-green-600 mb-2">1</div>
                     <div class="text-gray-600 text-sm md:text-base">Years Serving</div>
                 </div>
                 <div class="fade-in p-4">
-                    <div class="text-3xl md:text-4xl font-bold text-purple-600 mb-2">45%</div>
+                    <div class="text-3xl md:text-4xl font-bold text-purple-600 mb-2">TBC</div>
                     <div class="text-gray-600 text-sm md:text-base">Crime Reduction</div>
                 </div>
                 <div class="fade-in p-4">
-                    <div class="text-3xl md:text-4xl font-bold text-orange-600 mb-2">24/7</div>
+                    <div class="text-3xl md:text-4xl font-bold text-orange-600 mb-2">Daily</div>
                     <div class="text-gray-600 text-sm md:text-base">Community Support</div>
                 </div>
             </div>
@@ -333,7 +362,7 @@
 
     <main class="container mx-auto px-4 py-8">
         <!-- Latest News -->
-        <section class="mb-16 section-spacing">
+        <section class="hidden"> <!--class="mb-16 section-spacing" -->
             <h2 class="text-3xl font-bold mb-8 text-center">Latest Community News</h2>
             <div id="news" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
@@ -366,7 +395,7 @@
         </section>
 
         <!-- Quick Actions -->
-        <section class="mb-16 section-spacing">
+        <section class="hidden"> <!--class="mb-16 section-spacing"-->
             <h2 class="text-3xl font-bold mb-8 text-center">Quick Actions</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center card-hover">
@@ -378,7 +407,7 @@
                     <button onclick="scrollToSection('report')" 
                             class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
                             aria-label="Report an incident">
-                        Report Now
+                        Coming Soon<!-- Report Now -->
                     </button>
                 </div>
                 <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center card-hover">
@@ -402,7 +431,7 @@
                     <button onclick="scrollToSection('membership')" 
                             class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors btn-transition"
                             aria-label="Join the community">
-                        Join Now
+                        Coming Soon<!-- Join Now -->
                     </button>
                 </div>
             </div>
@@ -424,7 +453,7 @@
         </section>
 
         <!-- Report Section -->
-        <section id="report" class="mb-16 section-spacing">
+        <section id="report" class="hidden"> <!--class="mb-16 section-spacing"-->
             <h2 class="text-3xl font-bold mb-8 text-center">Report Suspicious Activity</h2>
             <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
                 <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
@@ -510,7 +539,7 @@
         </section>
 
         <!-- Resources -->
-        <section id="resources" class="mb-16 section-spacing">
+        <section id="resources" class="hidden"> <!--class="mb-16 section-spacing" -->
             <h2 class="text-3xl font-bold mb-8 text-center">Safety Resources</h2>
             <div class="mb-6 text-center max-w-3xl mx-auto">
                 <p class="text-gray-600">Browse our collection of safety guides and resources to help keep you and your family safe.</p>
@@ -519,7 +548,7 @@
         </section>
 
         <!-- Membership -->
-        <section id="membership" class="mb-16 section-spacing">
+        <section id="membership" class="hidden"> <!--class="mb-16 section-spacing" -->
             <h2 class="text-3xl font-bold mb-8 text-center">Join Our Community</h2>
             <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -549,7 +578,7 @@
         </section>
 
         <!-- Community Forum -->
-        <section id="forum" class="mb-16 section-spacing">
+        <section id="forum" class="hidden"> <!--class="mb-16 section-spacing" -->
             <h2 class="text-3xl font-bold mb-8 text-center">Community Discussion</h2>
             <div class="bg-white rounded-2xl shadow-lg p-6">
                 <div class="mb-6">
@@ -602,8 +631,8 @@
                         <i class="fas fa-envelope text-blue-600 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Email</h3>
-                    <p class="text-gray-600 mb-2">info@walmleywatch.org</p>
-                    <a href="mailto:info@walmleywatch.org" 
+                    <p class="text-gray-600 mb-2">walmleyvillage@proton.me</p>
+                    <a href="mailto:walmleyvillage@proton.me" 
                        class="text-blue-600 hover:underline text-sm"
                        aria-label="Send email">
                         Send Message
@@ -614,8 +643,8 @@
                         <i class="fas fa-phone text-green-600 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Phone</h3>
-                    <p class="text-gray-600 mb-2">0121 555 1234</p>
-                    <a href="tel:01215551234" 
+                    <p class="text-gray-600 mb-2">TBC</p>
+                    <a href="tel:0000000000" 
                        class="text-green-600 hover:underline text-sm"
                        aria-label="Call us">
                         Call Now
@@ -626,8 +655,8 @@
                         <i class="fas fa-map-marker-alt text-purple-600 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Address</h3>
-                    <p class="text-gray-600 mb-2">Walmley Community Hall<br>Sutton Coldfield, B76</p>
-                    <a href="https://maps.google.com?q=Walmley+Community+Hall" 
+                    <p class="text-gray-600 mb-2">TBC</p>
+                    <a href="" 
                        target="_blank" 
                        rel="noopener"
                        class="text-purple-600 hover:underline text-sm"
@@ -653,7 +682,7 @@
                             <p class="text-gray-400 text-sm">Neighbourhood Watch</p>
                         </div>
                     </div>
-                    <p class="text-gray-400">Keeping our community safe and connected since 2005.</p>
+                    <p class="text-gray-400">Keeping our community safe and connected since 2025.</p>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
@@ -849,48 +878,21 @@
             calendar: [
                 { 
                     id: 1, 
-                    title: "Monthly Community Meeting", 
-                    date: "2025-07-25", 
-                    time: "18:00", 
-                    location: "Walmley Community Hall",
+                    title: "Community Meeting", 
+                    date: "2025-08-13", 
+                    time: "19:00 [7pm]", 
+                    location: "Walmley Cricket Club",
                     type: "meeting",
-                    description: "Monthly update on community safety and upcoming initiatives. All residents welcome."
+                    description: "Update on community safety and upcoming initiatives. Invite only."
                 },
                 { 
                     id: 2, 
-                    title: "Summer Safety Walk", 
+                    title: "Protest", 
                     date: "2025-08-05", 
-                    time: "19:00", 
-                    location: "Village Green (meet by the fountain)",
-                    type: "patrol",
-                    description: "Community safety walk around the village. We'll identify areas that need improved lighting or surveillance."
-                },
-                { 
-                    id: 3, 
-                    title: "Home Security Workshop", 
-                    date: "2025-08-12", 
-                    time: "14:00", 
-                    location: "Community Centre, Room 3",
-                    type: "workshop",
-                    description: "Learn about home security systems and best practices from local experts. Free security assessments available."
-                },
-                { 
-                    id: 4, 
-                    title: "Neighborhood Watch Training", 
-                    date: "2025-08-20", 
-                    time: "10:00", 
-                    location: "Police Community Hub",
-                    type: "training",
-                    description: "Training session for new Neighborhood Watch volunteers. Learn how to be effective community observers."
-                },
-                { 
-                    id: 5, 
-                    title: "Family Safety Day", 
-                    date: "2025-09-07", 
-                    time: "11:00", 
-                    location: "Walmley Park",
+                    time: "16:00", 
+                    location: "Pens Lane (Ramada) hotel",
                     type: "event",
-                    description: "Fun day out with safety demonstrations, kids' activities, and information stalls from local services."
+                    description: "Community safety event. Open to all residents."
                 }
             ],
             resources: [
