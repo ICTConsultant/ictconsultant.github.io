@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Interactive Exploration of Walmley Village</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A dashboard-style SPA with a sticky top navigation bar for quick access to thematic sections (Home, Community, Lifestyle, Safety, Heritage). This structure breaks down the dense qualitative report into digestible, interactive modules arranged in a responsive grid. The user can get a high-level overview and then dive deep into specific topics via clicks and hovers. This non-linear approach is chosen for better usability and exploration, encouraging discovery of how different facets of Walmley's identity are interconnected, rather than forcing a linear read-through of the original report structure. -->
+    <!-- Visualisation & Content Choices: 
+        - Report Info: Property Prices (Table 1) -> Goal: Compare -> Viz: Bar Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Clear visual comparison of housing values.
+        - Report Info: Demographic stats (marriage rate) -> Goal: Inform -> Viz: Key Figure Cards (HTML/Tailwind) -> Interaction: Static -> Justification: Makes key data points scannable.
+        - Report Info: Community institutions (churches, clubs) -> Goal: Organize/Inform -> Viz: Master-Detail Card Grid -> Interaction: Click card to update detail pane -> Justification: More engaging than a list, allows focused exploration.
+        - Report Info: Safety initiatives (Police, WRA, NHW partnership) -> Goal: Inform/Reassure -> Viz: HTML/CSS Diagram -> Interaction: Hover tooltips -> Justification: Visualises relationships clearly without SVG.
+        - Report Info: Historical dates -> Goal: Show Change -> Viz: Interactive Timeline -> Interaction: Click year to show event details -> Justification: Makes heritage section dynamic.
+        - Library/Method: Chart.js for canvas charts, Vanilla JS for all interactions, HTML/Tailwind for all layouts and styling. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #333;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #C06C56;
+            border-bottom-color: #C06C56;
+        }
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .timeline-dot {
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .timeline-dot.active, .timeline-dot:hover {
+            background-color: #C06C56;
+            transform: scale(1.25);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800">Walmley Village</h1>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="nav-link text-gray-600 font-medium pb-1">Home</a>
+                <a href="#community" class="nav-link text-gray-600 font-medium pb-1">Community</a>
+                <a href="#lifestyle" class="nav-link text-gray-600 font-medium pb-1">Lifestyle</a>
+                <a href="#safety" class="nav-link text-gray-600 font-medium pb-1">Safety</a>
+                <a href="#heritage" class="nav-link text-gray-600 font-medium pb-1">Heritage</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+    </div>
+        <section id="home" class="text-center mb-24">
+        <a href="Index.html" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg shadow hover:bg-teal-700 transition font-medium">
+            &larr; Home
+        </a>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Visualising Walmley</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-12">
+                An interactive exploration into the identity of Walmley Village, a distinctive village in Sutton Coldfield. This dashboard synthesises a detailed report on the area's demographic, social fabric, and community values, revealing a stable, affluent, and community-oriented suburban environment.
+            </p>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-md card">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Established & Family-Oriented</h3>
+                    <p class="text-5xl font-bold text-teal-600 mb-2">63.8%</p>
+                    <p class="text-gray-600">of residents are married, significantly higher than the UK average of 44%, indicating a stable, family-focused community popular with established families and retirees.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md card">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Upper-Middle Class</h3>
+                    <p class="text-gray-600">The housing market reflects affluence, with properties ranging from well-presented family homes to executive detached houses.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md card md:col-span-2 lg:col-span-1">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Deeply Rooted Heritage</h3>
+                    <p class="text-gray-600">With a history stretching back centuries, including maps from the 1880s and residents' associations founded in 1928, the community values tradition and a strong sense of place.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="community" class="mb-24">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">The Pillars of the Community</h2>
+            <p class="max-w-3xl mx-auto text-center text-lg text-gray-600 mb-12">
+                Walmley's social and spiritual life is built upon strong local institutions. From its active churches to long-standing residents' associations, these pillars foster a deep sense of belonging and civic pride. Click on a card to learn more about its role in the community.
+            </p>
+            <div class="lg:grid lg:grid-cols-3 lg:gap-8 items-start">
+                <div id="community-cards" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4 mb-8 lg:mb-0">
+                </div>
+                <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-lg min-h-[300px]">
+                    <div id="community-detail">
+                        <h3 class="text-2xl font-bold text-gray-800">Select a Pillar</h3>
+                        <p class="text-gray-600 mt-2">Click on a card to the left to display detailed information here.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="lifestyle" class="mb-24">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">Housing & Lifestyle</h2>
+             <p class="max-w-3xl mx-auto text-center text-lg text-gray-600 mb-12">
+                The residential character of Walmley reflects its upper-middle-class demographic, with a mix of modern executive homes and charming traditional properties. This chart illustrates the price range of typical homes found in the area, underscoring the investment in quality of life.
+            </p>
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-xl font-bold text-center text-gray-800 mb-4">Illustrative Property Price Ranges in Walmley Village</h3>
+                <div class="chart-container">
+                    <canvas id="propertyChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="safety" class="mb-24">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">A Partnership for Safety</h2>
+            <p class="max-w-3xl mx-auto text-center text-lg text-gray-600 mb-12">
+                Safety in Walmley is a collaborative effort. A strong partnership between residents, local authorities and the police creates a secure environment, a key factor for the community's older demographic. Hover over the elements to see how they connect.
+            </p>
+            <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center">
+                 <div class="relative w-full max-w-2xl flex justify-around items-center h-64">
+                    <div class="absolute top-1/2 left-0 w-full h-0.5 bg-gray-300"></div>
+                    <div class="absolute top-0 left-1/2 w-0.5 h-full bg-gray-300"></div>
+                    
+                    <div class="safety-node absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" data-info="Local authorities, including City and Town Councillors, provide oversight and support for community initiatives.">
+                        <div class="bg-teal-100 text-teal-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Council</div>
+                    </div>
+                    <div class="safety-node absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2" data-info="Visible policing from PCSOs provides reassurance, community engagement, and crime prevention.">
+                        <div class="bg-teal-100 text-teal-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Police</div>
+                    </div>
+                    <div class="safety-node absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2" data-info="Proactive residents via the WRA and 850+ Neighbourhood Watch schemes ensure vigilance and community spirit.">
+                        <div class="bg-teal-100 text-teal-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Residents</div>
+                    </div>
+                    
+                    <div class="relative bg-teal-600 text-white p-6 rounded-full shadow-xl text-center w-48 h-48 flex items-center justify-center font-bold text-xl">
+                        A Safer Community
+                    </div>
+
+                    <div id="safety-tooltip" class="absolute hidden bg-gray-800 text-white text-sm rounded py-2 px-3 shadow-lg z-10 max-w-xs"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="heritage" class="mb-12">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">Historical Footprints</h2>
+            <p class="max-w-3xl mx-auto text-center text-lg text-gray-600 mb-12">
+                Walmley's identity is deeply connected to its past. This interactive timeline highlights key moments in its history, from the founding of community pillars to its documentation in historical maps. Click on a year to explore its significance.
+            </p>
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="relative w-full max-w-4xl mx-auto mb-8">
+                    <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-200 rounded"></div>
+                    <div id="timeline-dots" class="relative flex justify-between items-center"></div>
+                </div>
+                <div id="timeline-content" class="mt-8 p-6 bg-gray-50 rounded-lg min-h-[150px] flex items-center">
+                    <p class="text-gray-600">Select a year on the timeline to view historical details.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white mt-16 border-t">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-500">
+            <p>An interactive data visualisation based on Walmley Village.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const communityData = [
+        {
+            name: "St John's Church",
+            icon: "⛪",
+            description: "A lively, family-friendly Anglican church at the heart of the community. It offers a range of services for all ages and plays a key role in family life, including linking attendance to school admission forms.",
+            details: "Services include quiet Holy Communion, vibrant Morning Worship with kids groups (Sparkle, Ignite, Glow), and evening 'Encounter' services. Its deep integration into family and educational life makes it a central community anchor."
+        },
+        {
+            name: "Walmley Church",
+            icon: "🙏",
+            description: "An Evangelical Church focused on sharing 'the good news of salvation in Jesus Christ'. It serves as both a place of worship and a weekday drop-in centre for the community.",
+            details: "Features live praise and worship, ministry rooted in Biblical scripture, and baptisms. The drop-in centre offers a place of prayer and healing, with convenient off-road parking."
+        },
+        {
+            name: "W.R.A.",
+            icon: "🤝",
+            description: "The Walmley Residents Association, founded in 1928, is a group of local volunteers dedicated to enhancing the village feel of Walmley.",
+            details: "The WRA is active across all aspects of local life, including Transportation, Education, Planning, and The Environment. They hold monthly meetings and public forums to discuss local issues with councillors."
+        },
+        {
+            name: "Sports Clubs",
+            icon: "🏏",
+            description: "Sports are a cornerstone of social life, with clubs like the Walmley Cricket & Sports Club (est. 1886) providing facilities for all ages.",
+            details: "Offers ECB Accredited cricket and FA Accredited football. The club has a vibrant social scene with darts, pool, a well-stocked bar, and regular club nights, serving as a multi-generational hub."
+        },
+        {
+            name: "Golf Clubs",
+            icon: "⛳",
+            description: "Affluent leisure pursuits are common, with Walmley Golf Club and the nearby Belfry Resort catering to a strong local golf culture.",
+            details: "Walmley Golf Club features a well-designed clubhouse with great views, a relaxing atmosphere, and formal dining, reflecting the lifestyle of the upper-middle-class demographic."
+        },
+        {
+            name: "Traditional Pubs",
+            icon: "🍺",
+            description: "Local pubs like The Fox and The White Horse are integral social hubs, known for being child and dog-friendly with traditional food and atmospheres.",
+            details: "These establishments function as extended living spaces for families, offering beer gardens, fireplaces, and cask ales. They foster a strong sense of local belonging and reinforce the cherished 'village feel'."
+        }
+    ];
+
+    const communityCardsContainer = document.getElementById('community-cards');
+    const communityDetailContainer = document.getElementById('community-detail');
+
+    communityData.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'community-card bg-white p-4 rounded-xl shadow-md cursor-pointer text-center card';
+        card.innerHTML = `<div class="text-4xl mb-2">${item.icon}</div><h4 class="font-bold text-gray-800">${item.name}</h4>`;
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.community-card').forEach(c => c.classList.remove('ring-2', 'ring-teal-500'));
+            card.classList.add('ring-2', 'ring-teal-500');
+            communityDetailContainer.innerHTML = `
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">${item.name}</h3>
+                <p class="text-lg text-gray-700 mb-4">${item.description}</p>
+                <p class="text-gray-600">${item.details}</p>
+            `;
+        });
+        communityCardsContainer.appendChild(card);
+    });
+
+    const propertyCtx = document.getElementById('propertyChart').getContext('2d');
+    const propertyChart = new Chart(propertyCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Semi-Detached House', 'Extended Detached', 'Executive / Cottage'],
+            datasets: [{
+                label: 'Approximate Price (£)',
+                data: [310000, 514000, 650000],
+                backgroundColor: [
+                    'rgba(20, 184, 166, 0.6)',
+                    'rgba(13, 148, 136, 0.6)',
+                    'rgba(15, 118, 110, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(20, 184, 166, 1)',
+                    'rgba(13, 148, 136, 1)',
+                    'rgba(15, 118, 110, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '£' + (value / 1000) + 'k';
+                        }
+                    }
+                },
+                x: {
+                   ticks: {
+                        autoSkip: false,
+                        maxRotation: 0,
+                        minRotation: 0,
+                         callback: function(value, index, values) {
+                            const label = this.getLabelForValue(value);
+                            if (label.length > 16) {
+                                return label.split(' ').map(word => word.length > 8 ? word.substring(0,8)+'...' : word);
+                            }
+                            return label;
+                        }
+                   }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', minimumFractionDigits: 0 }).format(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const safetyNodes = document.querySelectorAll('.safety-node');
+    const tooltip = document.getElementById('safety-tooltip');
+    safetyNodes.forEach(node => {
+        node.addEventListener('mousemove', function(e) {
+            tooltip.style.left = e.pageX + 15 + 'px';
+            tooltip.style.top = e.pageY + 15 + 'px';
+        });
+        node.addEventListener('mouseenter', function() {
+            tooltip.textContent = this.dataset.info;
+            tooltip.classList.remove('hidden');
+        });
+        node.addEventListener('mouseleave', function() {
+            tooltip.classList.add('hidden');
+        });
+    });
+
+    const timelineData = [
+        { year: "1886", event: "Walmley Cricket & Sports Club was founded, establishing itself as a community heart for nearly 140 years." },
+        { year: "1928", event: "The Walmley Residents Association (WRA) was founded, beginning a long history of civic engagement and preserving the 'village feel'." },
+        { year: "1930s", event: "The current building for The Fox pub was constructed, continuing a tradition of a pub on the site since Victorian times." },
+        { year: "2000", event: "The Sutton Neighbourhood Watch (NHW) was established as a registered charity, formalising the partnership between residents and police to make communities safer." }
+    ];
+    const timelineDotsContainer = document.getElementById('timeline-dots');
+    const timelineContentContainer = document.getElementById('timeline-content');
+    
+    timelineData.forEach((item, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'timeline-dot w-6 h-6 bg-gray-300 rounded-full cursor-pointer flex items-center justify-center';
+        const innerDot = document.createElement('span');
+        innerDot.className = 'text-xs font-bold text-white -rotate-45';
+        innerDot.textContent = item.year;
+        dot.appendChild(innerDot);
+        dot.style.transform = 'rotate(45deg)';
+        
+        dot.addEventListener('click', () => {
+            document.querySelectorAll('.timeline-dot').forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+            timelineContentContainer.innerHTML = `
+                <div>
+                    <h4 class="font-bold text-xl text-gray-800 mb-2">${item.year}</h4>
+                    <p class="text-gray-700">${item.event}</p>
+                </div>
+            `;
+        });
+        timelineDotsContainer.appendChild(dot);
+    });
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 60) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('active');
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
