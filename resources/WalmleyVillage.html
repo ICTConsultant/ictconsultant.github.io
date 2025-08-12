@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Calm Harmony -->
     <!-- Application Structure Plan: A dashboard-style SPA with a sticky top navigation bar for quick access to thematic sections (Home, Community, Lifestyle, Safety, Heritage). This structure breaks down the dense qualitative report into digestible, interactive modules arranged in a responsive grid. The user can get a high-level overview and then dive deep into specific topics via clicks and hovers. This non-linear approach is chosen for better usability and exploration, encouraging discovery of how different facets of Walmley's identity are interconnected, rather than forcing a linear read-through of the original report structure. -->
     <!-- Visualisation & Content Choices: 
@@ -21,7 +21,7 @@
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #F8F7F4;
             color: #333;
         }
@@ -65,15 +65,25 @@
 </head>
 <body class="antialiased">
 
-    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <header class="bg-gradient-to-r from-teal-600 to-teal-400 shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-gray-800">Walmley Village</h1>
+            <div class="flex items-center space-x-3">
+                <span class="inline-block text-white text-2xl align-middle">
+                    <!-- Shield icon SVG (same as index.html) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l7 4v5c0 5.25-3.5 9.75-7 11-3.5-1.25-7-5.75-7-11V7l7-4z" />
+                    </svg>
+                </span>
+                <h1 class="text-2xl font-bold text-white tracking-tight">Walmley Village</h1>
+            </div>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="/index.html" class="nav-link text-gray-600 font-medium pb-1">Home</a>
-                <a href="#community" class="nav-link text-gray-600 font-medium pb-1">Community</a>
-                <a href="#lifestyle" class="nav-link text-gray-600 font-medium pb-1">Lifestyle</a>
-                <a href="#safety" class="nav-link text-gray-600 font-medium pb-1">Safety</a>
-                <a href="#heritage" class="nav-link text-gray-600 font-medium pb-1">Heritage</a>
+                <a href="/index.html" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg shadow hover:bg-teal-700 transition font-medium">
+                    &larr; Home
+                </a>
+                <a href="#community" class="nav-link text-white font-medium pb-1 hover:text-yellow-200">Community</a>
+                <a href="#lifestyle" class="nav-link text-white font-medium pb-1 hover:text-yellow-200">Lifestyle</a>
+                <a href="#safety" class="nav-link text-white font-medium pb-1 hover:text-yellow-200">Safety</a>
+                <a href="#heritage" class="nav-link text-white font-medium pb-1 hover:text-yellow-200">Heritage</a>
             </div>
         </nav>
     </header>
@@ -81,9 +91,6 @@
     <main class="container mx-auto px-6 py-12">
     </div>
         <section id="home" class="text-center mb-24">
-        <a href="/index.html" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg shadow hover:bg-teal-700 transition font-medium">
-            &larr; Home
-        </a>
             <h2 class="text-4xl font-bold text-gray-800 mb-4">Visualising Walmley</h2>
             <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-12">
                 An interactive exploration into the identity of Walmley Village, a distinctive village in Sutton Coldfield. This dashboard synthesises a detailed report on the area's demographic, social fabric, and community values, revealing a stable, affluent, and community-oriented suburban environment.
@@ -348,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const dot = document.createElement('div');
         dot.className = 'timeline-dot w-6 h-6 bg-gray-300 rounded-full cursor-pointer flex items-center justify-center';
         const innerDot = document.createElement('span');
-        innerDot.className = 'text-xs font-bold text-white -rotate-45';
+        innerDot.className = 'text-xs font-bold text-green -rotate-45';
         innerDot.textContent = item.year;
         dot.appendChild(innerDot);
         dot.style.transform = 'rotate(45deg)';
