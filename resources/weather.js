@@ -19,10 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             weatherDisplay.innerHTML = `
             <span class="text-gray-600 text-sm md:text-base">
-                <strong>Weather:</strong> ${conditionText}
-                <strong>Temperature:</strong> ${tempC}°C
-                <strong>Humidity:</strong> ${humidity}%
-                <strong>Wind:</strong> ${windKph} kph
+                ${tempC}°C
             </span>
             `;
         })
