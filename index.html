@@ -878,21 +878,21 @@
             calendar: [
                 { 
                     id: 1, 
-                    title: "Community Meeting", 
+                    title: "Community Meeting - Invite only", 
                     date: "2025-08-13", 
                     time: "19:00 [7pm]", 
                     location: "Walmley Cricket Club",
                     type: "meeting",
-                    description: "Update on community safety and upcoming initiatives. Invite only."
+                    description: "Update on community safety and upcoming initiatives."
                 },
                 { 
                     id: 2, 
-                    title: "Protest", 
+                    title: "Protest - Open to all residents", 
                     date: "2025-08-05", 
                     time: "16:00", 
                     location: "Pens Lane (Ramada) hotel",
                     type: "event",
-                    description: "Community safety event. Open to all residents."
+                    description: "Community safety event."
                 }
             ],
             resources: [
@@ -1222,7 +1222,7 @@
                         <div class="text-sm text-gray-600 space-y-1">
                             <p><i class="fas fa-calendar mr-2"></i>${formatDate(event.date)} at ${event.time}</p>
                             <p><i class="fas fa-map-marker-alt mr-2"></i>${event.location}</p>
-                            <p class="text-xs text-gray-500 mt-2">${event.description}</p>
+                            <p class="text-base text-gray-500 mt-2">${event.description}</p>
                         </div>
                     </div>
                 `;
