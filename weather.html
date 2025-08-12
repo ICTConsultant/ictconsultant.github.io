@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Weather.JS - Weather Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .weather-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        .weather-card h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .weather-card p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .weather-icon {
+            width: 80px;
+            height: 80px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="weather-card">
+    <h2>Current Weather - Weather.JS test!</h2>
+    <div id="weather-display">
+        <p>Loading weather data...</p>
+    </div>
+</div>
+
+<script src="resources/weather.js"></script>
+
+</body>
+</html>
