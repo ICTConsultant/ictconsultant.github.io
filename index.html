@@ -1026,11 +1026,6 @@
                     neighbourhoods: '/locate-neighbourhood'
                 },
                 cacheDuration: 3600000 // 1 hour in milliseconds
-            },
-            weather: {
-                baseUrl: 'https://api.openweathermap.org/data/2.5',
-                key: 'demo_key', // Note: In production, use a proper API key
-                cacheDuration: 1800000 // 30 minutes in milliseconds
             }
         };
 
@@ -1040,8 +1035,7 @@
             eventsPerPage: 3,
             currentForumPage: 1,
             forumPostsPerPage: 3,
-            lastCrimeFetch: null,
-            lastWeatherFetch: null
+            lastCrimeFetch: null
         };
 
         // DOM Ready
@@ -1089,10 +1083,7 @@
                 // Fetch fresh data
                 fetchCrimeData();
             }
-            
-            // Fetch weather data
-            fetchWeatherData();
-            
+                        
             // Set up periodic data refresh
             setupDataRefresh();
         }
@@ -1609,90 +1600,7 @@
             `;
         }
 
-        // Enhanced weather integration
-        async function fetchWeatherData() {
-            updateApiStatus('loading', 'Fetching weather data...');
-            
-            try {
-                // Check for cached weather data
-                const lastWeatherFetch = localStorage.getItem('lastWeatherFetch');
-                const cachedWeatherData = localStorage.getItem('cachedWeatherData');
-                
-                if (cachedWeatherData && lastWeatherFetch && 
-                    (Date.now() - new Date(lastWeatherFetch).getTime()) < API_CONFIG.weather.cacheDuration) {
-                    // Use cached data
-                    const weatherData = JSON.parse(cachedWeatherData);
-                    displayWeatherInfo(weatherData);
-                    updateApiStatus('success', 'Weather data loaded from cache');
-                    return;
-                }
-                
-                // This would be the actual API call in production:
-                // const url = `${API_CONFIG.weather.baseUrl}/weather?lat=${WALMLEY_COORDS.lat}&lon=${WALMLEY_COORDS.lng}&appid=${API_CONFIG.weather.key}&units=metric`;
-                // const response = await fetch(url);
-                // const weatherData = await response.json();
-                
-                // Mock data for demo purposes
-                const conditions = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain', 'Overcast'];
-                const mockWeatherData = {
-                    main: {
-                        temp: Math.round(15 + Math.random() * 10),
-                        humidity: Math.round(40 + Math.random() * 40)
-                    },
-                    weather: [{
-                        main: conditions[Math.floor(Math.random() * conditions.length)],
-                        icon: '01d' // Default icon
-                    }],
-                    wind: {
-                        speed: Math.round(5 + Math.random() * 15)
-                    },
-                    name: 'Walmley'
-                };
-                
-                displayWeatherInfo(mockWeatherData);
-                
-                // Cache the data
-                localStorage.setItem('lastWeatherFetch', new Date().toISOString());
-                localStorage.setItem('cachedWeatherData', JSON.stringify(mockWeatherData));
-                
-                updateApiStatus('success', 'Weather data loaded');
-            } catch (error) {
-                console.error('Weather data fetch failed:', error);
-                updateApiStatus('error', 'Failed to load weather data');
-            }
-        }
-
-        function displayWeatherInfo(weather) {
-            const weatherWidget = `
-                <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h4 class="font-semibold text-blue-900">Current Weather</h4>
-                            <p class="text-blue-700 capitalize">${weather.weather[0].main.toLowerCase()}</p>
-                            <p class="text-sm text-blue-600 mt-1">
-                                Humidity: ${weather.main.humidity}% | Wind: ${weather.wind.speed} mph
-                            </p>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-2xl font-bold text-blue-600">${Math.round(weather.main.temp)}°C</div>
-                            <div class="text-sm text-blue-500">${weather.name || 'Walmley'}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Add weather widget to home section
-            const homeSection = document.querySelector('#home .container');
-            if (homeSection && !document.querySelector('#weather-widget')) {
-                const weatherDiv = document.createElement('div');
-                weatherDiv.id = 'weather-widget';
-                weatherDiv.className = 'mt-6 fade-in';
-                weatherDiv.innerHTML = weatherWidget;
-                homeSection.appendChild(weatherDiv);
-            }
-        }
-
-        function setupDataRefresh() {
+       function setupDataRefresh() {
             // Refresh crime data every hour
             setInterval(() => {
                 const lastFetch = localStorage.getItem('lastCrimeFetch');
@@ -1700,14 +1608,6 @@
                     fetchCrimeData();
                 }
             }, 3600000); // 1 hour
-            
-            // Refresh weather data every 30 minutes
-            setInterval(() => {
-                const lastFetch = localStorage.getItem('lastWeatherFetch');
-                if (!lastFetch || (Date.now() - new Date(lastFetch).getTime()) > API_CONFIG.weather.cacheDuration) {
-                    fetchWeatherData();
-                }
-            }, 1800000); // 30 minutes
         }
 
         function setupNavbarScroll() {
