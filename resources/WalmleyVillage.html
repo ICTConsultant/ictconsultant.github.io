@@ -44,8 +44,8 @@
             border-bottom: 2px solid transparent;
         }
         .nav-link:hover, .nav-link.active {
-            color: #C06C56;
-            border-bottom-color: #C06C56;
+            color: blue;
+            border-bottom-color: blue;
         }
         .card {
             transition: transform 0.3s, box-shadow 0.3s;
@@ -58,14 +58,14 @@
             transition: background-color 0.3s, transform 0.3s;
         }
         .timeline-dot.active, .timeline-dot:hover {
-            background-color: #C06C56;
+            background-color: blue;
             transform: scale(1.25);
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <header class="bg-gradient-to-r from-teal-600 to-teal-400 shadow-md sticky top-0 z-50">
+    <header class="bg-gradient-to-r from-green-600 to-green-400 shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <span class="inline-block text-white text-2xl align-middle">
@@ -77,13 +77,13 @@
                 <h1 class="text-2xl font-bold text-white tracking-tight">Walmley Village</h1>
             </div>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="/index.html" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg shadow hover:bg-teal-700 transition font-medium">
+                <a href="/index.html" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition font-medium">
                     &larr; Home
                 </a>
-                <a href="#community" class="nav-link text-white font-medium pb-1 hover:text-yellow-200">Community</a>
-                <a href="#lifestyle" class="nav-link text-white font-medium pb-1 hover:text-yellow-200">Lifestyle</a>
-                <a href="#safety" class="nav-link text-white font-medium pb-1 hover:text-yellow-200">Safety</a>
-                <a href="#heritage" class="nav-link text-white font-medium pb-1 hover:text-yellow-200">Heritage</a>
+                <a href="#community" class="nav-link text-white font-medium pb-1 hover:text-darkblue-200">Community</a>
+                <a href="#lifestyle" class="nav-link text-white font-medium pb-1 hover:text-darkblue-200">Lifestyle</a>
+                <a href="#safety" class="nav-link text-white font-medium pb-1 hover:text-darkblue-200">Safety</a>
+                <a href="#heritage" class="nav-link text-white font-medium pb-1 hover:text-darkblue-200">Heritage</a>
             </div>
         </nav>
     </header>
@@ -99,7 +99,7 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
                 <div class="bg-white p-6 rounded-xl shadow-md card">
                     <h3 class="font-bold text-xl text-gray-800 mb-2">Established & Family-Oriented</h3>
-                    <p class="text-5xl font-bold text-teal-600 mb-2">63.8%</p>
+                    <p class="text-5xl font-bold text-green-600 mb-2">63.8%</p>
                     <p class="text-gray-600">of residents are married, significantly higher than the UK average of 44%, indicating a stable, family-focused community popular with established families and retirees.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md card">
@@ -154,16 +154,16 @@
                     <div class="absolute top-0 left-1/2 w-0.5 h-full bg-gray-300"></div>
                     
                     <div class="safety-node absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" data-info="Local authorities, including City and Town Councillors, provide oversight and support for community initiatives.">
-                        <div class="bg-teal-100 text-teal-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Council</div>
+                        <div class="bg-green-100 text-green-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Council</div>
                     </div>
                     <div class="safety-node absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2" data-info="Visible policing from PCSOs provides reassurance, community engagement, and crime prevention.">
-                        <div class="bg-teal-100 text-teal-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Police</div>
+                        <div class="bg-green-100 text-green-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Police</div>
                     </div>
                     <div class="safety-node absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2" data-info="Proactive residents via the WRA and 850+ Neighbourhood Watch schemes ensure vigilance and community spirit.">
-                        <div class="bg-teal-100 text-teal-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Residents</div>
+                        <div class="bg-green-100 text-green-800 p-4 rounded-full shadow-md text-center w-32 h-32 flex items-center justify-center">Residents</div>
                     </div>
                     
-                    <div class="relative bg-teal-600 text-white p-6 rounded-full shadow-xl text-center w-48 h-48 flex items-center justify-center font-bold text-xl">
+                    <div class="relative bg-green-600 text-white p-6 rounded-full shadow-xl text-center w-48 h-48 flex items-center justify-center font-bold text-xl">
                         A Safer Community
                     </div>
 
@@ -245,8 +245,8 @@ document.addEventListener('DOMContentLoaded', function () {
         card.className = 'community-card bg-white p-4 rounded-xl shadow-md cursor-pointer text-center card';
         card.innerHTML = `<div class="text-4xl mb-2">${item.icon}</div><h4 class="font-bold text-gray-800">${item.name}</h4>`;
         card.addEventListener('click', () => {
-            document.querySelectorAll('.community-card').forEach(c => c.classList.remove('ring-2', 'ring-teal-500'));
-            card.classList.add('ring-2', 'ring-teal-500');
+            document.querySelectorAll('.community-card').forEach(c => c.classList.remove('ring-2', 'ring-green-500'));
+            card.classList.add('ring-2', 'ring-green-500');
             communityDetailContainer.innerHTML = `
                 <h3 class="text-2xl font-bold text-gray-800 mb-2">${item.name}</h3>
                 <p class="text-lg text-gray-700 mb-4">${item.description}</p>
