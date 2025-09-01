@@ -17,14 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // const conditionText = data.current.condition.text;
             // const conditionIcon = data.current.condition.icon;
 
-            weatherDisplay.innerHTML = "
+            weatherDisplay.innerHTML = `
             <span class="text-gray-600 text-sm md:text-base">
                 ${tempC}°C
             </span>
-            ";
+            `;
         })
         .catch(error => {
-            weatherDisplay.innerHTML = "<p style="color: red;">Error fetching weather data: ${error.message}</p>";
+            weatherDisplay.innerHTML = `<p style="color: red;">Error fetching weather data: ${error.message}</p>`;
             console.error('Weather API: Error:', error);
         });
 });
