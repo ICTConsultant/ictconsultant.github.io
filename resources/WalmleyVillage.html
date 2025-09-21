@@ -44,8 +44,8 @@
             border-bottom: 2px solid transparent;
         }
         .nav-link:hover, .nav-link.active {
-            color: blue;
-            border-bottom-color: blue;
+            color: darkgreen;
+            border-bottom-color: black;
         }
         .card {
             transition: transform 0.3s, box-shadow 0.3s;
@@ -58,7 +58,7 @@
             transition: background-color 0.3s, transform 0.3s;
         }
         .timeline-dot.active, .timeline-dot:hover {
-            background-color: blue;
+            background-color: lightgreen;
             transform: scale(1.25);
         }
     </style>
@@ -68,18 +68,17 @@
     <header class="bg-gradient-to-r from-green-600 to-green-400 shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
+                <a href="/index.html" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition font-medium">
+                    Home
+                </a>                <h1 class="text-2xl font-bold text-white tracking-tight">Walmley Village</h1>
                 <span class="inline-block text-white text-2xl align-middle">
                     <!-- Shield icon SVG (same as index.html) -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l7 4v5c0 5.25-3.5 9.75-7 11-3.5-1.25-7-5.75-7-11V7l7-4z" />
                     </svg>
                 </span>
-                <h1 class="text-2xl font-bold text-white tracking-tight">Walmley Village</h1>
             </div>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="/index.html" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition font-medium">
-                    &larr; Home
-                </a>
                 <a href="#community" class="nav-link text-white font-medium pb-1 hover:text-darkblue-200">Community</a>
                 <a href="#lifestyle" class="nav-link text-white font-medium pb-1 hover:text-darkblue-200">Lifestyle</a>
                 <a href="#safety" class="nav-link text-white font-medium pb-1 hover:text-darkblue-200">Safety</a>
